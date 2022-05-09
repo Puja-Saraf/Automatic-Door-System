@@ -62,11 +62,12 @@ function App() {
     <div className="App">
       {showModal && <UserModal  set={setgt} />}
       {showInput && <Input onClose={handleInput} handleChange={handleChange} />}
-      <h1 className="heading" style={{ color: "#c23866" }}>
+      <h1 className="heading" style={{ color: "#c23866", fontWeight:"bold" }}>
         Automatic Door System
       </h1>
       <div className="state-changes">
-        <h3>Display Panel</h3>
+        <h3 style={{fontWeight:"bold", marginTop:"1%"}}>Display Panel</h3>
+        <br/>
         <p>
           Door's Current State -{" "}
           {doorState === 0 && <span style={{ fontWeight: "bold" }}>OPENING</span>}
@@ -81,6 +82,7 @@ function App() {
           {personState === 2 && <span style={{ fontWeight: "bold" }}>LEAVING</span>}
           {personState === 3 && <span style={{ fontWeight: "bold" }}>NULL</span>}
         </p>
+        <p>Timer to change door's state - {" "}<span style={{ fontWeight: "bold" }}>{gt}</span></p>
       </div>
       <div className="button-1">
         {dis && <button className='disa' >Set Configuration</button>}
