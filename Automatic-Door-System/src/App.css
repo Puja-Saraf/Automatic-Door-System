@@ -32,3 +32,13 @@ button:hover {
 .state-changes p span {
   color: #c23866;
 }
+
+.disa{
+  background: none;
+  color: grey;
+  border: 2px solid grey;
+}
+.disa:hover {
+  background: none;
+  color: grey;
+}
