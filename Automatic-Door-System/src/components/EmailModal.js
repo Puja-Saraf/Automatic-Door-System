@@ -2,29 +2,28 @@ import React, { useState } from "react";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
-import { useAlert } from "react-alert";
 import axios from "axios";
+import { toast } from "react-toastify";
 export default function EmailModal(props) {
   const [text, setText] = useState("");
   const [subject, setSubject] = useState("");
-  const [error, setErrors] = useState({});
-  const alert = useAlert();
+  const [Error, setErrors] = useState({ Message: "", Subject: "" });
   const handleValidation = () => {
-    let errors = {};
+    let Errors = { Message: "", Subject: "" };
     let formIsValid = true;
-
     //Subject
-    if (!subject) {
+    if (subject.trim().length === 0) {
       formIsValid = false;
-      errors["Subject"] = "Cannot Be Empty!!";
+      Errors.Subject = "Cannot Be Empty!!";
     }
 
     //Message
-    if (!text) {
+    if (text.trim().length === 0) {
       formIsValid = false;
-      errors["Message"] = "Cannot Be Empty!!";
+      Errors.Message = "Cannot Be Empty!!";
     }
-    setErrors(errors);
+    Error.Message = Errors.Message;
+    Error.Subject = Errors.Subject;
     return formIsValid;
   };
   const handleClose = () => {
@@ -34,43 +33,58 @@ export default function EmailModal(props) {
   };
   const handleSend = async (e) => {
     e.preventDefault();
-
+    console.log("ashutosh");
     if (handleValidation()) {
       try {
+        const id = toast.loading("Sending....");
         await axios
           .post("http://localhost:4000/send_mail", {
             text,
             subject,
           })
           .then(() => {
+            toast.update(id, {
+              render: "Email Sent",
+              autoClose: 3000,
+              hideProgressBar: true,
+              type: "success",
+              isLoading: false,
+            });
             props.onHide();
             setText("");
             setSubject("");
-            alert.success("Email Sent");
+            // toast.success("Email Sent", {
+            //   hideProgressBar: true,
+            //   autoClose: 2000,
+            // });
           })
-          .catch((error) => {
+          .catch((err) => {
             setText("");
             setSubject("");
-            alert.error(
-              <div style={{ textTransform: "initial" }}>
-                Something Went Wrong
-              </div>
-            );
+            toast.update(id, {
+              render: "Something Went Wrong",
+              autoClose: 2000,
+              hideProgressBar: true,
+              type: "error",
+              isLoading: false,
+            });
           });
-      } catch (error) {
+      } catch (err) {
         setText("");
         setSubject("");
-        alert.error(
-          <div style={{ textTransform: "initial" }}>Something Went Wrong</div>
-        );
+        toast.error("Something Went Wrong", {
+          hideProgressBar: true,
+          autoClose: 2000,
+        });
       }
     } else {
-      for (const property in error) {
-        alert.error(
-          <div
-            style={{ textTransform: "initial" }}
-          >{`${property}:${error[property]}`}</div>
-        );
+      for (const property in Error) {
+        if (Error[property].trim().length > 0) {
+          toast.error(`${property}:${Error[property]}`, {
+            hideProgressBar: true,
+            autoClose: 2000,
+          });
+        }
       }
     }
   };
