@@ -8,5 +8,5 @@ Go to Automatic-Door-System folder and run
 - npm start
 
 Go to server folder and run
--npm install
--nodemon index.js
+- npm install
+- nodemon index.js
